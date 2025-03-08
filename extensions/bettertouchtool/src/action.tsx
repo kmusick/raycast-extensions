@@ -35,18 +35,24 @@ export default function Command() {
 
 function ActionInput({ actionResult }: { actionResult: ActionResult }) {
   async function handleSubmit(values: { param: string }) {
-    const { bttSharedSecret: shared_secret } = getPreferenceValues<Preferences.Action>();
+    try {
+      const { bttSharedSecret: shared_secret } = getPreferenceValues<Preferences.Action>();
 
-    const jsxCommand = `
-      var BetterTouchTool = Application('BetterTouchTool');
-      var actionDefinition = {
-        "BTTPredefinedActionType": ${actionResult.type},
-        ${actionResult.param ? `"${actionResult.param}": "${values.param}"` : ""}
-      };
-      BetterTouchTool.trigger_action(JSON.stringify(actionDefinition), { shared_secret: ${JSON.stringify(shared_secret)} });
-    `;
+      const jsxCommand = `
+        var BetterTouchTool = Application('BetterTouchTool');
+        var actionDefinition = {
+          "BTTPredefinedActionType": ${actionResult.type},
+          ${actionResult.param ? `"${actionResult.param}": "${values.param}"` : ""}
+        };
+        BetterTouchTool.trigger_action(JSON.stringify(actionDefinition), { shared_secret: ${JSON.stringify(shared_secret)} });
+      `;
 
-    await runAppleScript(jsxCommand, { language: "JavaScript" });
+      await runAppleScript(jsxCommand, { language: "JavaScript" });
+    } catch (e) {
+      await showFailureToast(e, {
+        title: "Failed to run action",
+      });
+    }
   }
 
   return (
