@@ -8,12 +8,16 @@ export const BTT_NOT_RUNNING_ERROR = "BetterTouchTool must be running to use thi
 export function createJXAScript(scriptBody: (bttApp: string) => string): string {
   const bttVarName = "btt";
   return `
-function run(argv) {
+function run() {
   let ${bttVarName} = Application('BetterTouchTool');
   if (!${bttVarName}.running()) {
     return "error: ${BTT_NOT_RUNNING_ERROR}";
   }
   
-  ${scriptBody(bttVarName)}
+  try {
+    ${scriptBody(bttVarName)}
+  } catch (e) {
+    return `error: ${e.message}`;
+  }
 } run();`;
 }

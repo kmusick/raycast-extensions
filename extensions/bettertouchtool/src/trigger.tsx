@@ -62,7 +62,7 @@ function TriggerSections({
   const { bttNamedTriggerMostUsedCount: mostUsedPref, bttNamedTriggerDefaultAction: defaultAction } =
     getPreferenceValues<Preferences.Trigger>();
   const defaultGroupName = "Default";
-  const mostUsedCount = mostUsedPref === "none" ? 0 : parseInt(mostUsedPref);
+  const mostUsedCount = mostUsedPref === "none" ? 0 : Number.parseInt(mostUsedPref, 10) || 0;
 
   const { mostUsed, groupedTriggers } = useMemo(() => {
     const mostUsed = namedTriggers.slice(0, mostUsedCount);

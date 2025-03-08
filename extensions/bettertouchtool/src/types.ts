@@ -1,4 +1,4 @@
-interface NamedTriggerAction {
+export interface NamedTriggerAction {
   name: string;
   enabled: boolean;
 }

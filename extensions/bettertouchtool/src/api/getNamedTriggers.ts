@@ -12,17 +12,22 @@ function flattenGroups(groups: NamedTriggerGroup[]): Record<string, string> {
   });
 
   // Function to build the full path for a group
-  function buildGroupPath(group: NamedTriggerGroup): string {
+  function buildGroupPath(group: NamedTriggerGroup, visited = new Set<string>()): string {
     if (!group.parentUUID) {
       return group.name;
     }
+
+    if (visited.has(group.uuid)) {
+      return group.name; // Break circular dependency
+    }
+    visited.add(group.uuid);
 
     const parent = groupMap[group.parentUUID];
     if (!parent) {
       return group.name;
     }
 
-    return `${buildGroupPath(parent)} > ${group.name}`;
+    return `${buildGroupPath(parent, visited)} > ${group.name}`;
   }
 
   // Create the flattened result
@@ -127,7 +132,7 @@ export interface BTTGetTriggersResult {
   groups: {
     uuid: string;
     name: string;
-    parentUUID: string;
+    parentUUID?: string;
   }[];
   triggers: BTTTrigger[];
 }

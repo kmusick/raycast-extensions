@@ -18,7 +18,7 @@ export function useNamedTriggers(showAllTriggers: boolean) {
   } = useCachedPromise(
     async (result: typeof namedTriggersResult, showAllTriggers: boolean) => {
       if (!result) {
-        throw new Error("No result found. This ");
+        throw new Error("No result found.");
       }
       if (result.status === "error") {
         throw new Error(result.error);

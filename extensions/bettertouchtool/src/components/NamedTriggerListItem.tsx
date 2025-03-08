@@ -27,7 +27,11 @@ async function handleRevealInUI(uuid: string) {
         title: "Open BetterTouchTool Application",
         onAction: async () => {
           const osaCommand = 'tell application "BetterTouchTool" to reopen';
-          await runAppleScript(osaCommand);
+          try {
+            await runAppleScript(osaCommand);
+          } catch (error) {
+            await showFailureToast("Failed to open BetterTouchTool");
+          }
         },
       },
     });
@@ -51,8 +55,12 @@ export function NamedTriggerListItem({
       /* eslint-disable-next-line @raycast/prefer-title-case */
       title="Trigger via URL Scheme"
       onAction={async () => {
-        await runNamedTriggerUrl(trigger.name);
-        await visitItem(trigger);
+        try {
+          await runNamedTriggerUrl(trigger.name);
+          await visitItem(trigger);
+        } catch (error) {
+          await showFailureToast("Failed to run trigger via URL");
+        }
       }}
       icon={Icon.Link}
     />
