@@ -35,7 +35,7 @@ type Input = {
  *
  * Returns search results with a score (0 = perfect match, 1 = complete mismatch)
  */
-export default async function (input: Input) {
+export default async function tool(input: Input) {
   const andExpressions: Expression[] = [];
 
   if (input.searchNames && input.searchNames.length > 0) {

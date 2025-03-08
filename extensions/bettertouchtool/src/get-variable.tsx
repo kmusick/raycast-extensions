@@ -1,17 +1,12 @@
 import { Action, ActionPanel, Detail, Icon, Keyboard, LaunchProps, openExtensionPreferences } from "@raycast/api";
-import { usePromise, showFailureToast } from "@raycast/utils";
+import { showFailureToast, usePromise } from "@raycast/utils";
 import { useEffect } from "react";
 import { getVariable } from "./api";
 
 export default function Command(props: LaunchProps<{ arguments: Arguments.GetVariable }>) {
   const { variableName } = props.arguments;
 
-  const { data, isLoading, error, revalidate } = usePromise(
-    async (variableName: string) => {
-      return await getVariable(variableName);
-    },
-    [variableName],
-  );
+  const { data, isLoading, error, revalidate } = usePromise(getVariable, [variableName]);
 
   useEffect(() => {
     if (error) {
@@ -26,19 +21,18 @@ export default function Command(props: LaunchProps<{ arguments: Arguments.GetVar
   }, [error]);
 
   function formatVariableValue(): string {
-    const result = data;
-    if (!result) return "";
+    if (!data) return "";
 
-    if (result.status === "error") {
-      return `\`Error: ${result.error}\``;
+    if (data.status === "error") {
+      return `\`Error: ${data.error}\``;
     }
 
-    if (result.data.type === "null") {
+    if (data.data.type === "null") {
       return "`Variable does not exist or has null value`";
     }
 
-    const typeLabel = result.data.type === "string" ? "String" : "Number";
-    return `**Type:** ${typeLabel}\n\n**Value:** \`${result.data.value}\``;
+    const typeLabel = data.data.type === "string" ? "String" : "Number";
+    return `**Type:** ${typeLabel}\n\n**Value:** \`${data.data.value}\``;
   }
 
   const markdown = error

@@ -23,6 +23,7 @@ export async function setVariableImplementation(
 ): Promise<void> {
   // Get the preference value
   const { bttSetVariableDefaultAction } = getPreferenceValues<Preferences.SetStringVariable>();
+  persistence = persistence || "temporary";
 
   // Determine if we should close the window based on the action type
   const shouldKeepWindowOpen = bttSetVariableDefaultAction === "applescript";

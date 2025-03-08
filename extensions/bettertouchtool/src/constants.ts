@@ -9,7 +9,13 @@ export function createJXAScript(scriptBody: (bttApp: string) => string): string 
   const bttVarName = "btt";
   return `
 function run() {
-  let ${bttVarName} = Application('BetterTouchTool');
+  let ${bttVarName};
+  try {
+    ${bttVarName} = Application('BetterTouchTool');
+  } catch (e) {
+    return "error: BetterTouchTool is not installed";
+  }
+  
   if (!${bttVarName}.running()) {
     return "error: ${BTT_NOT_RUNNING_ERROR}";
   }
@@ -17,7 +23,7 @@ function run() {
   try {
     ${scriptBody(bttVarName)}
   } catch (e) {
-    return `error: ${e.message}`;
+    return "error: " + e;
   }
 } run();`;
 }

@@ -37,7 +37,7 @@ export const confirmation: Tool.Confirmation<Input> = async (input) => {
   };
 };
 
-export default async function (input: Input): Promise<Result<void>> {
+export default async function tool(input: Input): Promise<Result<void>> {
   if (input.runType === "AppleScript") {
     return await runNamedTriggerAppleScript(input.name);
   } else {

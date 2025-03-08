@@ -20,7 +20,7 @@ type Output =
 /**
  * Gets the value of a BetterTouchTool variable.
  */
-export default async function (input: Input): Promise<Output> {
+export default async function tool(input: Input): Promise<Output> {
   const { variableName } = input;
 
   try {

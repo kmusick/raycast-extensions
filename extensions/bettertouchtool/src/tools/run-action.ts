@@ -44,7 +44,7 @@ export const confirmation: Tool.Confirmation<Input> = async (input) => {
   return { message };
 };
 
-export default async function (input: Input): Promise<Result<void>> {
+export default async function tool(input: Input): Promise<Result<void>> {
   const { bttSharedSecret: secret } = getPreferenceValues();
 
   // Create the action definition object using createJXAScript
