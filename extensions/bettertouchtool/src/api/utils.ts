@@ -1,5 +1,3 @@
-import { BTT_NOT_RUNNING_ERROR } from "../constants";
-
 /**
  * Creates a standardized error message format for JXA script errors
  * Also includes the return statement for direct use in JXA scripts
@@ -22,13 +20,4 @@ export function returnErrorText(errorMessage: string, errorVariableName?: string
  */
 export function isErrorResponse(response: string): boolean {
   return response.startsWith("error: ");
-}
-
-/**
- * Checks if the error is specifically about BTT not running
- * @param error The error message to check
- * @returns True if the error indicates BTT is not running
- */
-export function isBTTNotRunningError(error: string): boolean {
-  return error.includes(BTT_NOT_RUNNING_ERROR);
 }

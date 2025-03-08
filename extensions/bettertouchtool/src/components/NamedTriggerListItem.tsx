@@ -107,7 +107,7 @@ export function NamedTriggerListItem({
     }
 
     return result;
-  }, [trigger]);
+  }, [trigger.actions, trigger.enabled]);
   const triggerUrl = useMemo(() => getUrlForNamedTrigger(trigger.name), [trigger.name]);
 
   return (

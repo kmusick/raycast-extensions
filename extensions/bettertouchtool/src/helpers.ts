@@ -1,5 +1,4 @@
 import { getPreferenceValues } from "@raycast/api";
-import { BTT_NOT_RUNNING_ERROR } from "./constants";
 
 /**
  * Generates a BTT URL scheme for triggering a named trigger
@@ -41,13 +40,4 @@ export function getRevealInUIAppleScript(uuid: string): string {
   return `tell application "BetterTouchTool"
   reveal_element_in_ui ${JSON.stringify(uuid)}${secretParam}
 end tell`;
-}
-
-/**
- * Checks if an error message indicates that BTT is not running
- * @param error The error message to check
- * @returns True if the error indicates BTT is not running
- */
-export function isBTTNotRunningError(error: string): boolean {
-  return error.includes(BTT_NOT_RUNNING_ERROR);
 }
