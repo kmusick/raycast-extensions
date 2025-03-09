@@ -1,5 +1,6 @@
 import { getNamedTriggers } from "../api";
 import Fuse, { Expression } from "fuse.js";
+import { Result } from "../types";
 
 type Input = {
   /**
@@ -36,6 +37,13 @@ type Input = {
   searchEnabledStatus?: "enabled" | "disabled";
 };
 
+export type SearchResult = {
+  score: string;
+  name: string;
+  enabled: boolean;
+  groupName?: string;
+};
+
 /**
  * Search for Named Triggers using fuzzy search with flexible filtering options.
  *
@@ -54,12 +62,18 @@ type Input = {
  * - "find keyboard triggers in either Utilities or Macros groups" maps to:
  *   searchGroups: ["Utilities", "Macros"], searchNames: ["keyboard"]
  *
- * Returns search results with a score (0 = perfect match, 1 = complete mismatch)
+ * Returns search results with a score (0 = perfect match, 1 = complete mismatch).
+ *
+ * IMPORTANT: Only tell the user about triggers that match their search criteria. NEVER
+ * mention triggers that do not fit their criteria.
  */
-export default async function tool(input: Input) {
+export default async function tool(input: Input): Promise<Result<SearchResult[]>> {
   const namedTriggersResult = await getNamedTriggers();
   if (namedTriggersResult.status === "error") {
-    return namedTriggersResult.error;
+    return {
+      status: "error",
+      error: namedTriggersResult.error,
+    };
   }
 
   const andExpressions: Expression[] = [];
@@ -92,10 +106,14 @@ export default async function tool(input: Input) {
     $and: andExpressions,
   });
 
-  return searchResults.map((result) => ({
-    score: result.score,
+  const data: SearchResult[] = searchResults.map((result) => ({
     name: result.item.name,
     enabled: result.item.enabled,
     groupName: result.item.groupName,
+    score: result.score?.toFixed(6) ?? "Unknown",
   }));
+  return {
+    status: "success",
+    data
+  };
 }

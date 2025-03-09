@@ -149,7 +149,7 @@
     }
   ],
   "ai": {
-    "instructions": "When dealing with BetterTouchTool variable values or names, do NOT change the format, capitalization, punctuation, etc. The verbatim values MUST be used. Always include the variable type (string or number) in the output. When the user asks to run something: if the word 'action' or 'actions' appears ANYWHERE in their request, ALWAYS use run-action. Only use run-named-trigger when they specifically mention 'trigger' or don't specify what to run.",
+    "instructions": "When dealing with BetterTouchTool variable values or names, do NOT change the format, capitalization, punctuation, etc. The verbatim values MUST be used. Always include the variable type (string or number) in the output.",
     "evals": [
       {
         "input": "@bettertouchtool set myVar to test value",
@@ -245,25 +245,25 @@
               "enabled": false,
               "groupName": "Helpers",
               "name": "Alpha",
-              "score": 1.4901161193847656e-08
+              "score": "0.000000"
             },
             {
               "enabled": false,
               "groupName": "Helpers",
               "name": "Bravo",
-              "score": 1.4901161193847656e-08
+              "score": "0.000000"
             },
             {
               "enabled": false,
               "groupName": "Others",
               "name": "Charlie",
-              "score": 0.66975475255605954
+              "score": "0.669754"
             },
             {
               "enabled": false,
               "groupName": "Others",
               "name": "Delta",
-              "score": 0.66975475255605954
+              "score": "0.669754"
             }
           ]
         },
@@ -314,37 +314,37 @@
               "enabled": false,
               "groupName": "Helpers",
               "name": "Alpha",
-              "score": 1.1542389828584841e-08
+              "score": "0.000000"
             },
             {
               "enabled": false,
               "groupName": "Helpers",
               "name": "Bravo",
-              "score": 1.1542389828584841e-08
+              "score": "0.000000"
             },
             {
               "enabled": true,
               "groupName": "Helpers",
               "name": "Charlie",
-              "score": 1.1542389828584841e-08
+              "score": "0.000000"
             },
             {
               "enabled": false,
               "groupName": "Others",
               "name": "Delta",
-              "score": 0.021179504917996278
+              "score": "0.021179"
             },
             {
               "enabled": false,
               "groupName": "Others",
               "name": "Echo",
-              "score": 0.021179504917996278
+              "score": "0.021179"
             },
             {
               "enabled": true,
               "groupName": "Others",
               "name": "Foxtrot",
-              "score": 0.021179504917996278
+              "score": "0.021179"
             }
           ]
         },
@@ -399,19 +399,28 @@
         ]
       },
       {
-        "input": "@bettertouchtool run trigger 'bravo'",
+        "input": "@bettertouchtool run trigger bravo",
         "mocks": {
           "run-named-trigger": {
             "status": "success"
           },
-          "search-named-triggers": [
-            {
-              "enabled": false,
-              "groupName": "Helpers",
-              "name": "Bravo",
-              "score": 1.4901161193847656e-08
-            }
-          ]
+          "search-named-triggers": {
+            "data": [
+              {
+                "enabled": true,
+                "groupName": "Helpers",
+                "name": "Bravo",
+                "score": "0.000000"
+              },
+              {
+                "enabled": false,
+                "groupName": "Helpers",
+                "name": "Bravo #2",
+                "score": "0.086996"
+              }
+            ],
+            "status": "success"
+          }
         },
         "expected": [
           {
@@ -436,13 +445,81 @@
           {
             "callsTool": {
               "arguments": {
-                "name": "Bravo"
+                "searchResult.name": "Bravo",
+                "searchResult.groupName": "Helpers",
+                "searchResult.enabled": true,
+                "searchResult.score": "0.000000",
+                "runType": {
+                  "not": [
+                    {
+                      "includes": "URL"
+                    },
+                    {
+                      "includes": "AppleScript"
+                    }
+                  ]
+                }
               },
               "name": "run-named-trigger"
             }
+          }
+        ]
+      },
+      {
+        "input": "@bettertouchtool run trigger bravo using http",
+        "mocks": {
+          "run-named-trigger": {
+            "status": "success"
+          },
+          "search-named-triggers": {
+            "data": [
+              {
+                "enabled": true,
+                "groupName": "Helpers",
+                "name": "Bravo",
+                "score": "0.000000"
+              },
+              {
+                "enabled": false,
+                "groupName": "Helpers",
+                "name": "Bravo #2",
+                "score": "0.086996"
+              }
+            ],
+            "status": "success"
+          }
+        },
+        "expected": [
+          {
+            "callsTool": {
+              "arguments": {
+                "searchNames": [
+                  {
+                    "or": [
+                      {
+                        "includes": "bravo"
+                      },
+                      {
+                        "includes": "Bravo"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "name": "search-named-triggers"
+            }
           },
           {
-            "includes": "success"
+            "callsTool": {
+              "arguments": {
+                "searchResult.name": "Bravo",
+                "searchResult.groupName": "Helpers",
+                "searchResult.enabled": true,
+                "searchResult.score": "0.000000",
+                "runType": "URL"
+              },
+              "name": "run-named-trigger"
+            }
           }
         ]
       },
@@ -509,39 +586,45 @@
         ]
       },
       {
-        "input": "@bettertouchtool run charlie",
+        "input": "@bettertouchtool run bravo",
         "mocks": {
           "run-named-trigger": {
             "status": "success"
           },
-          "search-named-triggers": [
-            {
-              "enabled": true,
-              "groupName": "Helpers",
-              "name": "Charlie",
-              "score": 1.4901161193847656e-08
-            },
-            {
-              "enabled": true,
-              "name": "Create Quicklink",
-              "score": 0.82051410239669198
-            }
-          ]
+          "search-named-triggers": {
+            "data": [
+              {
+                "enabled": true,
+                "groupName": "Helpers",
+                "name": "Bravo",
+                "score": "0.000000"
+              },
+              {
+                "enabled": false,
+                "groupName": "Helpers",
+                "name": "Bravo #2",
+                "score": "0.086996"
+              }
+            ],
+            "status": "success"
+          }
         },
         "expected": [
           {
             "callsTool": {
               "arguments": {
-                "searchNames": {
-                  "or": [
-                    {
-                      "includes": "charlie"
-                    },
-                    {
-                      "includes": "Charlie"
-                    }
-                  ]
-                }
+                "searchNames": [
+                  {
+                    "or": [
+                      {
+                        "includes": "bravo"
+                      },
+                      {
+                        "includes": "Bravo"
+                      }
+                    ]
+                  }
+                ]
               },
               "name": "search-named-triggers"
             }
@@ -549,7 +632,10 @@
           {
             "callsTool": {
               "arguments": {
-                "name": "Charlie"
+                "searchResult.name": "Bravo",
+                "searchResult.groupName": "Helpers",
+                "searchResult.enabled": true,
+                "searchResult.score": "0.000000"
               },
               "name": "run-named-trigger"
             }

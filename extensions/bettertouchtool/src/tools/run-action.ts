@@ -44,6 +44,20 @@ export const confirmation: Tool.Confirmation<Input> = async (input) => {
   return { message };
 };
 
+/**
+ * Run an action in BetterTouchTool.
+ *
+ * IMPORTANT: You MUST use the search-action tool first to find the correct action type.
+ * IMPORTANT: Only use this tool if the user directly requests running an action.
+ *
+ * Example requests:
+ * - "Run the action 12345"
+ * - "Run 'expose' action"
+ * - "Run right click action"
+ *
+ * Notice that each example explicitly mentions 'action'.
+ * @param input
+ */
 export default async function tool(input: Input): Promise<Result<void>> {
   const { bttSharedSecret: secret } = getPreferenceValues();
 
