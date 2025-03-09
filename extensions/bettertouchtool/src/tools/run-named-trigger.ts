@@ -34,7 +34,7 @@ export const confirmation: Tool.Confirmation<Input> = async (input) => {
  * - "Invoke y via applescript"
  */
 export default async function tool(input: Input): Promise<Result<void>> {
-  if (!input.runType){
+  if (!input.runType) {
     const { bttNamedTriggerDefaultAction } = getPreferenceValues<Preferences>();
     input.runType = bttNamedTriggerDefaultAction === "applescript" ? "AppleScript" : "URL";
   }

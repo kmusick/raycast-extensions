@@ -114,6 +114,6 @@ export default async function tool(input: Input): Promise<Result<SearchResult[]>
   }));
   return {
     status: "success",
-    data
+    data,
   };
 }
